@@ -1,21 +1,73 @@
-# Your API
+# Interview SWE-01
 
-This is where you are expected to write the application. You are free to choose the technology and framework. At Djamo, our typical stack is written in [TypeScript](https://www.typescriptlang.org/), using [NestJS](https://docs.nestjs.com/) and relying on [Postgres](https://www.postgresql.org/) for persistent storage and [Redis](https://redis.io/) for cache.
+This repository contains code for the Interview Software Engineer (SWE) 01 project. It includes tests for API functionality using Jest.
 
-## Expected endpoints
+## Getting Started
 
-You are expected to implement at least one endpoint, `/transaction` that accepts HTTP POST requests from the client. You are free to choose the body and headers of that endpoint.
+To get started with this project, follow these steps:
 
-## Expected artefacts
+### Prerequisites
 
-### README file
+- [Docker](https://www.docker.com/) installed on your system.
 
-You _need_ to update this README with instructions on how to use your program. Think of it as scratchboard. You are highly encouraged to discuss your approach, mention pitfalls you have seen but not fixed, alternative approaches that you may have discarded and for what reason.
+### Installation
 
-### Documentation
+1. Clone this repository to your local machine:
 
-Sequence diagrams are encouraged to describe your chosen approach, other than that you are welcomed to document your code as you would have done under normal circumstances.
+    ```bash
+    git clone https://github.com/your_username/interview-swe-01.git
+    ```
 
-### Working solution
+2. Navigate to the project directory:
 
-⚠️ The whole stack needs to work with the command: `docker-compose up -d`. You are expected to update the Dockerfiles and the docker-compose file according to the requirements of your solution. For instance, if you need an SQL script to be ran against a database, it needs to be done automatically without human intervention.
+    ```bash
+    cd interview-swe-01
+    ```
+3. Install dependencies:
+
+    ```bash
+    npm install
+    ```    
+
+3. Build the Docker image:
+
+    ```bash
+    docker-compose up --build
+    ```
+
+### Running Tests
+
+To run the tests, execute the following command:
+
+```bash
+npx jest your_api/tests/your_api.test.js
+
+### Test Flow Diagram
+
+1. **Test 'Transaction is handled once even if retried'**
+
+    - Send transaction request to http://localhost:3300/ transaction
+    - Mock response from API
+    - Receive response with status 'completed'
+    - Verify response equality
+
+2. **Test 'Transactions are marked as successful or failed appropriately'**
+
+    - Send transaction request to http://localhost:3300/transaction
+    - Mock response from API
+    - Receive response with status 'completed' or 'declined'
+    - Verify response status match
+
+3. **Test 'Response is returned to the client as fast as possible'**
+
+    - Send transaction request to http://localhost:3300/transaction
+    - Mock response from API
+    - Measure response time
+    - Verify response time within 10000 ms
+
+4. **Test 'Success/failure notification is sent to the mobile application as quickly as possible'**
+
+    - Send transaction request to http://localhost:3300/transaction
+    - Mock response from API
+    - Receive response with status 'completed'
+    - Verify response status 'completed'

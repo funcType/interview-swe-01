@@ -1,12 +1,12 @@
-const express = require('express');
-const axios = require('axios');
-const { randomUUID } = require('crypto');
+const express = require("express");
+const axios = require("axios");
+const { randomUUID } = require("crypto");
 
 const app = express();
 app.use(express.json());
 
-const port = process.env.PORT || 3300;
-const thirdPartyUrl = process.env.THIRD_PARTY_URL || 'http://localhost:3000';
+const port = process.env.PORT || 3301;
+const thirdPartyUrl = process.env.THIRD_PARTY_URL || "http://localhost:3000";
 
 const transactions = {};
 
@@ -17,18 +17,17 @@ const simulateLatency = (latency) => {
 
 // Function to notify mobile application
 const notifyMobileApp = (transaction) => {
-  // TODO: Implement notification mechanism to notify the mobile app about the transaction status
+  // Implement notification mechanism here
   console.log(`Notifying mobile app about transaction status: ${transaction.status}`);
 };
 
 // Endpoint to handle transaction requests
-app.post('/transaction', async (req, res) => {
-  const id = randomUUID();
+app.post("/transaction", async (req, res) => {
+  const id = req.body.id || randomUUID(); // TODO: If the request doesn't provide an ID, generate one
   const webhookUrl = req.body.webhookUrl;
 
   try {
     // Make a request to third-party service
-    // TODO: Send transaction request to the third-party service
     const response = await axios.post(`${thirdPartyUrl}/transaction`, { id, webhookUrl });
 
     // Update transaction status
@@ -40,25 +39,25 @@ app.post('/transaction', async (req, res) => {
 
     res.status(200).json(transactions[id]);
   } catch (error) {
-    console.error('Error processing transaction:', error);
+    console.error("Error processing transaction:", error);
 
     // Handle timeout or failure
-    transactions[id] = { id, status: 'failed', webhookUrl };
+    transactions[id] = { id, status: "failed", webhookUrl };
 
     // Notify mobile application
     notifyMobileApp(transactions[id]);
 
-    res.status(500).json({ error: 'Transaction failed' });
+    res.status(500).json({ error: "Transaction failed" });
   }
 });
 
 // Endpoint to check transaction status
-app.get('/transaction/:id', (req, res) => {
+app.get("/transaction/:id", (req, res) => {
   const id = req.params.id;
   const transaction = transactions[id];
 
   if (!transaction) {
-    return res.status(404).json({ error: 'Transaction not found' });
+    return res.status(404).json({ error: "Transaction not found" });
   }
 
   res.status(200).json(transaction);
@@ -67,4 +66,3 @@ app.get('/transaction/:id', (req, res) => {
 app.listen(port, () => {
   console.log(`Your API is listening on port ${port}`);
 });
-

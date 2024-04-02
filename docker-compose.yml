@@ -8,7 +8,7 @@ services:
   client:
     build: ./client
     environment:
-      YOUR_API: "http://localhost:3200" # replace with your new API
+      YOUR_API: "http://localhost:3300"
     ports:
       - "3100:3100"
 
